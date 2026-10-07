@@ -60,15 +60,17 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
             <h2>{goal.title}</h2>
             <p className="goal-date">{goal.date}</p>
           </div>
-          <div className="progress">
-            <div>
-              <span>Progress</span>
-              <span>40%</span>
+          {level === 2 && (
+            <div className="progress">
+              <div>
+                <span>Progress</span>
+                <span>40%</span>
+              </div>
+              <div className="progress-track">
+                <span />
+              </div>
             </div>
-            <div className="progress-track">
-              <span />
-            </div>
-          </div>
+          )}
         </div>
       )}
     </article>
