@@ -3,8 +3,8 @@ export const levelScale = [0.57, 1, 1.46];
 const zoomThresholds = {
   thumbnailToDefault: (170 / 140) * levelScale[0],
   defaultToThumbnail: 0.6,
-  defaultToFocused: 280 / 247,
-  focusedToDefault: 0.98,
+  defaultToFocused: 340 / 247,
+  focusedToDefault: 1.22,
 };
 
 export const cardSize = [
@@ -22,7 +22,7 @@ export function canvasOrigin(level, viewportWidth) {
 }
 
 export function maxZoom(viewportWidth) {
-  const available = Math.max(1, viewportWidth - 60);
+  const available = Math.max(1, viewportWidth - 32);
   return Math.min(1.68, (available / cardSize[2].width) * levelScale[2]);
 }
 
