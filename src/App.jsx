@@ -1,5 +1,6 @@
 import { flushSync } from "react-dom";
 import { useEffect, useRef, useState } from "react";
+import { asset } from "./asset.js";
 import { chatTopics, goals, milestones, timeline } from "./data.js";
 import {
   canvasOrigin,
@@ -46,7 +47,7 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
           {goal.image && <img src={goal.image} alt="" draggable={false} />}
           {goal.private && (
             <div className="private-badge">
-              <img src="/assets/ca787.svg" alt="" />
+              <img src={asset("assets/ca787.svg")} alt="" />
               <span>Private</span>
             </div>
           )}
@@ -90,7 +91,7 @@ function TimelineCard({ goal, onOpen, transitioning }) {
           <img src={goal.image} alt="" />
           {goal.private && (
             <span className="timeline-lock">
-              <img src="/assets/ca787.svg" alt="" />
+              <img src={asset("assets/ca787.svg")} alt="" />
             </span>
           )}
         </div>
@@ -150,23 +151,23 @@ function GoalPage({ goal, onClose }) {
         <div className="goal-page-shared-media">
           <img
             className="goal-page-hero-background"
-            src={goal.image || "/assets/d90ac.png"}
+            src={goal.image || asset("assets/d90ac.png")}
             alt=""
           />
           <img
             className="goal-page-transition-image"
-            src={goal.image || "/assets/d90ac.png"}
+            src={goal.image || asset("assets/d90ac.png")}
             alt=""
           />
           {goal.private && (
             <span className="goal-page-private">
-              <img src="/assets/ca787.svg" alt="" />
+              <img src={asset("assets/ca787.svg")} alt="" />
               Private
             </span>
           )}
         </div>
         <button className="goal-page-back" onClick={onClose} aria-label="Back">
-          <img src="/assets/982d7.svg" alt="" />
+          <img src={asset("assets/982d7.svg")} alt="" />
         </button>
       </div>
       <div className="goal-page-sheet">
@@ -217,7 +218,7 @@ function GoalPage({ goal, onClose }) {
             <div className="goal-next-input">
               <span>Let’s pick the dates</span>
               <button aria-label="Send">
-                <img src="/assets/7644f.svg" alt="" />
+                <img src={asset("assets/7644f.svg")} alt="" />
               </button>
             </div>
           </section>
@@ -226,11 +227,11 @@ function GoalPage({ goal, onClose }) {
             <div className="recommendation-grid">
               <button className="recommendation-light">
                 <span>Check leave with work</span>
-                <img src="/assets/eb16c.svg" alt="" />
+                <img src={asset("assets/eb16c.svg")} alt="" />
               </button>
               <button className="recommendation-dark">
                 <span>Create an automation for building funds</span>
-                <img src="/assets/eb16c.svg" alt="" />
+                <img src={asset("assets/eb16c.svg")} alt="" />
               </button>
             </div>
           </section>
@@ -249,7 +250,7 @@ function GoalPage({ goal, onClose }) {
             {chatTopics.map((topic) => (
               <button key={topic}>
                 <span>{topic}</span>
-                <img src="/assets/076ec.svg" alt="" />
+                <img src={asset("assets/076ec.svg")} alt="" />
               </button>
             ))}
           </section>
@@ -264,17 +265,17 @@ function BottomNav() {
     <nav className="bottom-nav" aria-label="Primary navigation">
       <div className="nav-island">
         <button aria-label="Home">
-          <img src="/assets/64a13.svg" alt="" />
+          <img src={asset("assets/64a13.svg")} alt="" />
         </button>
         <button className="active" aria-label="Life goals">
-          <img src="/assets/9bbf1.svg" alt="" />
+          <img src={asset("assets/9bbf1.svg")} alt="" />
         </button>
         <button aria-label="Finances">
-          <img src="/assets/46147.svg" alt="" />
+          <img src={asset("assets/46147.svg")} alt="" />
         </button>
       </div>
       <button className="chat" aria-label="Messages">
-        <img src="/assets/cc1b0.svg" alt="" />
+        <img src={asset("assets/cc1b0.svg")} alt="" />
       </button>
     </nav>
   );
@@ -540,7 +541,7 @@ export default function App() {
           aria-haspopup="menu"
           onClick={() => setMenuOpen((open) => !open)}
         >
-          <img src="/assets/4fb4f.svg" alt="" />
+          <img src={asset("assets/4fb4f.svg")} alt="" />
           <span>{view === "canvas" ? "Canvas" : "Timeline"}</span>
         </button>
       </header>
@@ -560,7 +561,7 @@ export default function App() {
                 setMenuOpen(false);
               }}
             >
-              <img src="/assets/2d278.svg" alt="" />
+              <img src={asset("assets/2d278.svg")} alt="" />
               <span>Canvas</span>
             </button>
             <button
@@ -571,7 +572,7 @@ export default function App() {
                 setMenuOpen(false);
               }}
             >
-              <img src="/assets/d240d.svg" alt="" />
+              <img src={asset("assets/d240d.svg")} alt="" />
               <span>Timeline</span>
             </button>
           </div>
