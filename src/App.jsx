@@ -1,7 +1,7 @@
 import { flushSync } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { asset } from "./asset.js";
-import { chatTopics, goals, milestones, timeline } from "./data.js";
+import { chatTopics, goals, milestoneGroups, timeline } from "./data.js";
 import {
   canvasOrigin,
   cardPosition,
@@ -168,6 +168,45 @@ function Timeline({ onOpenGoal, transitioningGoalKey }) {
 }
 
 function GoalPage({ goal, onClose }) {
+  const [openMilestones, setOpenMilestones] = useState(() =>
+    milestoneGroups.filter((group) => group.tone === "tracking").map((group) => group.title),
+  );
+  const milestonesDone = milestoneGroups.filter((group) => group.tone === "done").length;
+  const milestonesTotal = milestoneGroups.length;
+  const [savedFunds, setSavedFunds] = useState(2000);
+  const [goalFunds] = useState(5000);
+  const [monthlyFunds, setMonthlyFunds] = useState(100);
+  const [editingFunds, setEditingFunds] = useState(false);
+  const [savedDraft, setSavedDraft] = useState("2000");
+  const [monthlyDraft, setMonthlyDraft] = useState("100");
+  const fundsPercent = goalFunds > 0 ? Math.min(100, Math.round((savedFunds / goalFunds) * 100)) : 0;
+  const [chat, setChat] = useState(null);
+  const openChat = (title) => setChat({ title });
+  const scrollToSection = (id) => {
+    const target = document.getElementById(id);
+    const scroller = target?.closest(".goal-page");
+    if (!target || !scroller) return;
+    const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    scroller.scrollTo({ top: Math.max(0, top - scroller.clientHeight * 0.28), behavior: "smooth" });
+  };
+  const toggleFundsEdit = () => {
+    if (!editingFunds) {
+      setSavedDraft(String(savedFunds));
+      setMonthlyDraft(String(monthlyFunds));
+      setEditingFunds(true);
+      return;
+    }
+    const nextSaved = Number(savedDraft);
+    const nextMonthly = Number(monthlyDraft);
+    if (Number.isFinite(nextSaved) && nextSaved >= 0) setSavedFunds(nextSaved);
+    if (Number.isFinite(nextMonthly) && nextMonthly >= 0) setMonthlyFunds(nextMonthly);
+    setEditingFunds(false);
+  };
+  const toggleMilestone = (title) => {
+    setOpenMilestones((current) =>
+      current.includes(title) ? current.filter((item) => item !== title) : [...current, title],
+    );
+  };
   return (
     <div className="goal-page">
       <div className="goal-page-hero">
@@ -202,29 +241,46 @@ function GoalPage({ goal, onClose }) {
           </div>
           <div className="goal-page-progress">
             <h2>Progress</h2>
-            <div className="goal-stat-card">
+            <button
+              type="button"
+              className="goal-stat-card"
+              aria-label="Go to milestones"
+              onClick={() => scrollToSection("milestones")}
+            >
               <div>
                 <span>Milestones achieved</span>
-                <strong>1 of 4</strong>
+                <strong>{milestonesDone} of {milestonesTotal}</strong>
               </div>
-              <div className="goal-dots">
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
-                <i />
+              <div className="goal-dots-row">
+                <div className="goal-dots">
+                  {Array.from({ length: milestonesTotal }, (_, index) => (
+                    <i key={index} className={index < milestonesDone ? "is-filled" : ""} />
+                  ))}
+                </div>
+                <span className="goal-dots-jump" aria-hidden="true">
+                  <img src={asset("assets/076ec.svg")} alt="" />
+                </span>
               </div>
-            </div>
-            <div className="goal-stat-card">
+            </button>
+            <button
+              type="button"
+              className="goal-stat-card"
+              aria-label="Go to funds"
+              onClick={() => document.getElementById("funds")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            >
               <div>
                 <span>Funds</span>
-                <strong>£2k/£5k</strong>
+                <strong>{formatMoney(savedFunds)}/{formatMoney(goalFunds)}</strong>
               </div>
-              <div className="goal-funds-track">
-                <i />
+              <div className="goal-dots-row">
+                <div className="goal-funds-track">
+                  <i style={{ width: `${fundsPercent}%` }} />
+                </div>
+                <span className="goal-dots-jump" aria-hidden="true">
+                  <img src={asset("assets/076ec.svg")} alt="" />
+                </span>
               </div>
-            </div>
+            </button>
           </div>
         </section>
         <div className="goal-page-body">
@@ -238,46 +294,235 @@ function GoalPage({ goal, onClose }) {
           </section>
           <section className="goal-copy-section">
             <h2>Next up</h2>
-            <div className="goal-next-input">
+            <div
+              className="goal-next-input"
+              role="button"
+              tabIndex={0}
+              onClick={() => openChat("Let’s pick the dates")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") openChat("Let’s pick the dates");
+              }}
+            >
               <span>Let’s pick the dates</span>
-              <button aria-label="Send">
+              <span className="goal-next-send" aria-hidden="true">
                 <img src={asset("assets/7644f.svg")} alt="" />
-              </button>
+              </span>
             </div>
           </section>
           <section className="goal-copy-section">
             <h2>Recommended next steps</h2>
             <div className="recommendation-grid">
-              <button className="recommendation-light">
+              <button className="recommendation-light" onClick={() => openChat("Check leave with work")}>
                 <span>Check leave with work</span>
                 <img src={asset("assets/eb16c.svg")} alt="" />
               </button>
-              <button className="recommendation-dark">
+              <button className="recommendation-dark" onClick={() => openChat("Create an automation for building funds")}>
                 <span>Create an automation for building funds</span>
                 <img src={asset("assets/eb16c.svg")} alt="" />
               </button>
             </div>
           </section>
-          <section className="milestone-panel">
-            <h2>Milestones</h2>
-            {milestones.map((item, index) => (
-              <label className="milestone-row" key={item.title}>
-                <input type="checkbox" defaultChecked={item.done} />
-                <span>{item.title}</span>
-                <small>{index === 0 ? "Done" : index === 2 ? "Tracking" : ""}</small>
-              </label>
-            ))}
+          <section className="milestone-panel" id="milestones">
+            <div className="funds-heading">
+              <h2>Milestones</h2>
+              <div className="milestone-count">
+                <div className="goal-dots" aria-hidden="true">
+                  {Array.from({ length: milestonesTotal }, (_, index) => (
+                    <i key={index} className={index < milestonesDone ? "is-filled" : ""} />
+                  ))}
+                </div>
+                <span>{milestonesDone}/{milestonesTotal}</span>
+              </div>
+            </div>
+            {milestoneGroups.map((group) => {
+              const open = openMilestones.includes(group.title);
+              return (
+              <div className={`milestone-group is-${group.tone}${open ? " is-open" : ""}`} key={group.title}>
+                <button
+                  type="button"
+                  className="milestone-group-head"
+                  aria-expanded={open}
+                  onClick={() => toggleMilestone(group.title)}
+                >
+                  <span className={`milestone-check ${group.tone === "done" ? "is-done" : ""}`} />
+                  <span className="milestone-group-title">{group.title}</span>
+                  <span className="milestone-group-meta">
+                    <span className="milestone-group-status">{group.tone === "later" ? `${group.status} (${group.items.length})` : group.status}</span>
+                    <img
+                      className="milestone-toggle"
+                      src={asset("assets/076ec.svg")}
+                      alt=""
+                    />
+                  </span>
+                </button>
+                {open && <div className="milestone-group-body">
+                  <span className="milestone-line" />
+                  <div className="milestone-cards">
+                    {group.items.map((item) => {
+                      const CardTag = item.done ? "div" : "button";
+                      return (
+                      <CardTag
+                        key={item.title}
+                        type={item.done ? undefined : "button"}
+                        className={`milestone-card ${item.done ? "is-done" : "is-open-action"}`}
+                        onClick={item.done ? undefined : () => openChat(item.title)}
+                      >
+                        <span className={`milestone-check ${item.done ? "is-done" : ""}`} />
+                        <span className="milestone-card-copy">
+                          <span>{item.title}</span>
+                          {item.detail && <strong>{item.detail}</strong>}
+                        </span>
+                        {item.owner === "photo" ? (
+                          <img className="milestone-owner is-photo" src={asset("assets/avatar-photo.png")} alt="" />
+                        ) : item.owner ? (
+                          <span className="milestone-owner">{item.owner}</span>
+                        ) : null}
+                      </CardTag>
+                      );
+                    })}
+                  </div>
+                </div>}
+              </div>
+              );
+            })}
+          </section>
+          <section className="funds-panel" id="funds">
+            <div className="funds-heading">
+              <h2>Funds</h2>
+              <button
+                type="button"
+                className="funds-update"
+                aria-label="Update funds"
+                onClick={() => openChat("Update funds")}
+              >
+                {editingFunds ? (
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3.2 8.4 6.3 11.5 12.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+            <div className="funds-card">
+              <div className="funds-row">
+                <span>Goal</span>
+                <strong>{formatMoney(goalFunds)}</strong>
+              </div>
+              <div className="funds-row">
+                <span>Saved so far</span>
+                {editingFunds ? (
+                  <input
+                    aria-label="Saved so far"
+                    inputMode="decimal"
+                    value={savedDraft}
+                    onChange={(event) => setSavedDraft(event.target.value)}
+                  />
+                ) : (
+                  <strong>{formatMoney(savedFunds)}</strong>
+                )}
+              </div>
+              <div className="funds-row">
+                <span>Putting away</span>
+                {editingFunds ? (
+                  <label className="funds-monthly">
+                    <input
+                      aria-label="Amount put away each month"
+                      inputMode="decimal"
+                      value={monthlyDraft}
+                      onChange={(event) => setMonthlyDraft(event.target.value)}
+                    />
+                    <span>/ month</span>
+                  </label>
+                ) : (
+                  <strong>{formatMoney(monthlyFunds)} / month</strong>
+                )}
+              </div>
+              <div className="goal-funds-track">
+                <i style={{ width: `${fundsPercent}%` }} />
+              </div>
+            </div>
           </section>
           <section className="goal-copy-section goal-chat">
-            <h2>Chat</h2>
+            <h2>Chats</h2>
             {chatTopics.map((topic) => (
-              <button key={topic}>
+              <button key={topic} onClick={() => openChat(topic)}>
                 <span>{topic}</span>
                 <img src={asset("assets/076ec.svg")} alt="" />
               </button>
             ))}
           </section>
         </div>
+      </div>
+      {chat && <ChatPage chat={chat} goal={goal} onBack={() => setChat(null)} />}
+    </div>
+  );
+}
+
+function ChatPage({ chat, goal, onBack }) {
+  const [draft, setDraft] = useState("");
+  const [messages, setMessages] = useState([]);
+  const send = (text) => {
+    const message = text.trim();
+    if (!message) return;
+    setMessages((current) => [
+      ...current,
+      { from: "user", text: message },
+      { from: "kemble", text: "Happy to help with that. Tell me a little more and I’ll pull it together for you." },
+    ]);
+    setDraft("");
+  };
+  const started = messages.length > 0;
+  return (
+    <div className="chat-page" role="dialog" aria-label={chat.title}>
+      <div className="chat-page-top">
+        <button type="button" className="chat-page-back" aria-label="Back to goal" onClick={onBack}>
+          <img src={asset("assets/982d7.svg")} alt="" />
+        </button>
+        <h1>{chat.title}</h1>
+        <p>{goal.title}</p>
+      </div>
+      <div className="chat-page-thread">
+        {messages.map((message, index) => (
+          <p key={index} className={`chat-message is-${message.from}`}>
+            {message.text}
+          </p>
+        ))}
+      </div>
+      <div className="chat-page-input">
+        {!started && (
+          <div className="chat-page-suggest">
+            <span>Start with</span>
+            <div className="chat-page-chips">
+              <button type="button" onClick={() => send(chat.title)}>
+                {chat.title}
+              </button>
+            </div>
+          </div>
+        )}
+        <form
+          className="chat-page-field"
+          onSubmit={(event) => {
+            event.preventDefault();
+            send(draft);
+          }}
+        >
+          <input
+            aria-label="Message"
+            placeholder="Message"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+          />
+          <button
+            type="submit"
+            className={draft ? "is-ready" : ""}
+            aria-label="Send"
+          >
+            <img src={asset("assets/7644f.svg")} alt="" />
+          </button>
+        </form>
       </div>
     </div>
   );

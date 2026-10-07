@@ -163,6 +163,75 @@ export const milestones = [
   { title: "Book the experience", done: false },
 ];
 
+export const milestoneGroups = [
+  {
+    title: "Decide where",
+    status: "Done",
+    tone: "done",
+    items: [
+      { title: "Which country should we visit?", detail: "Spain", done: true },
+      {
+        title: "What cities should we spend time in?",
+        detail: "Madrid, Toledo and Barcelona",
+        done: true,
+        owner: "AB",
+      },
+    ],
+  },
+  {
+    title: "Decide which 2 weeks to go",
+    status: "Tracking",
+    tone: "tracking",
+    items: [
+      { title: "Check work schedule and time off", done: false, owner: "AB" },
+      { title: "Check the kids summer camp schedule", done: false, owner: "photo" },
+    ],
+  },
+  {
+    title: "Decide what activities to do",
+    status: "Yet to come",
+    tone: "later",
+    items: [{ title: "Brainstorm activities", done: false, owner: "photo" }],
+  },
+  {
+    title: "Agree a budget",
+    status: "Yet to come",
+    tone: "later",
+    items: [
+      { title: "Set a spending limit for the trip", done: false, owner: "AB" },
+      { title: "Decide what to save each month", done: false, owner: "photo" },
+      { title: "Check what is already saved", done: false, owner: "AB" },
+    ],
+  },
+  {
+    title: "Book the flights",
+    status: "Yet to come",
+    tone: "later",
+    items: [
+      { title: "Compare routes into Spain", done: false, owner: "AB" },
+      { title: "Hold seats for the two weeks", done: false, owner: "photo" },
+    ],
+  },
+  {
+    title: "Sort the stay",
+    status: "Yet to come",
+    tone: "later",
+    items: [
+      { title: "Pick a base in Barcelona", done: false, owner: "AB" },
+      { title: "Check it works for the kids", done: false, owner: "photo" },
+    ],
+  },
+  {
+    title: "Get ready to go",
+    status: "Yet to come",
+    tone: "later",
+    items: [
+      { title: "Make a packing list", done: false, owner: "AB" },
+      { title: "Sort passports and insurance", done: false, owner: "photo" },
+    ],
+  },
+];
+
 export const chatTopics = [
   "Travel dates",
   "Destination",
