@@ -3,14 +3,14 @@ export const levelScale = [0.57, 1, 1.46];
 const zoomThresholds = {
   thumbnailToDefault: (170 / 140) * levelScale[0],
   defaultToThumbnail: 0.6,
-  defaultToFocused: 340 / 247,
+  defaultToFocused: 310 / 247,
   focusedToDefault: 1.22,
 };
 
 export const cardSize = [
   { width: 140, height: 140 },
-  { width: 247, height: 394 },
-  { width: 360, height: 547 },
+  { width: 247, height: 397 },
+  { width: 360, height: 550 },
 ];
 
 const gap = 28;

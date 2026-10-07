@@ -6,10 +6,10 @@
 .goal-card.is-overview .private-badge{top:-7px;left:-9px;right:auto;justify-content:center;gap:0;width:36px;height:36px;padding:0;border-radius:50%}
 .goal-card.is-overview .private-badge span{display:none}
 .goal-card.is-overview .private-badge img{width:12px;height:14px}
-.progress-inline{flex-direction:row;align-items:center;gap:10px;height:auto;font-family:TT Commons\:DemiBold,Arial,sans-serif;font-size:14px;font-weight:600}
+.progress-inline{flex-direction:row;align-items:center;gap:10px;height:auto;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500}
 .progress-inline .progress-track{flex:1}
 .progress-focused{gap:10px;height:auto}
-.goal-status{justify-content:space-between;align-items:baseline;gap:8px;width:100%;font-family:TT Commons\:Regular,Arial,sans-serif;font-size:13px;line-height:1.15}
+.goal-status{justify-content:space-between;align-items:baseline;gap:8px;width:100%;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.15}
 .goal-status span{white-space:nowrap}
 .goal-status span:nth-child(2){text-align:center}
 .goal-status span:last-child{text-align:right}
