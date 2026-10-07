@@ -84,7 +84,7 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
                   {formatMoney(goal.funded)}/{formatMoney(goal.target)}
                 </span>
                 <span>
-                  {goal.milestonesDone}/{goal.milestonesTotal} Milestones
+                  {goal.milestonesDone}/{goal.milestonesTotal} · Milestones
                 </span>
               </div>
               <div className="progress-track">
@@ -99,15 +99,20 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
 }
 
 function TimelineCard({ goal, onOpen, transitioning }) {
+  const marker = goal.marker;
   return (
     <article
-      className={`timeline-card ${transitioning ? "is-transitioning" : ""} timeline-${goal.tone}`}
-      role="button"
-      tabIndex={0}
-      onClick={onOpen}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") onOpen();
-      }}
+      className={`timeline-card${marker ? " is-marker" : ""} ${transitioning ? "is-transitioning" : ""} timeline-${goal.tone}`}
+      role={marker ? undefined : "button"}
+      tabIndex={marker ? undefined : 0}
+      onClick={marker ? undefined : onOpen}
+      onKeyDown={
+        marker
+          ? undefined
+          : (event) => {
+              if (event.key === "Enter" || event.key === " ") onOpen();
+            }
+      }
     >
       {goal.image && (
         <div className="timeline-card-image">
@@ -121,13 +126,21 @@ function TimelineCard({ goal, onOpen, transitioning }) {
       )}
       <div className="timeline-card-details">
         <h3>{goal.title}</h3>
-        <span className="timeline-count">{goal.count}</span>
+        {!marker && goal.count != null && <span className="timeline-count">{goal.count}</span>}
       </div>
     </article>
   );
 }
 
 function Timeline({ onOpenGoal, transitioningGoalKey }) {
+  useEffect(() => {
+    const scroller = document.querySelector(".timeline-scroll");
+    const current = scroller?.querySelector(".season-heading.active");
+    const year = current?.closest(".timeline-year");
+    if (!scroller || !year) return;
+    const top = year.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    scroller.scrollTop = Math.max(0, top - 8);
+  }, []);
   return (
     <div className="timeline-scroll">
       <div className="timeline-content">

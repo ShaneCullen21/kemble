@@ -85,13 +85,39 @@ export const goals = [
 
 export const timeline = [
   {
+    year: "2025",
+    seasons: [
+      {
+        name: "Winter",
+        icon: asset("assets/snowflake-outline.svg"),
+        goals: [{ title: "Joined Kemble", tone: "neutral", marker: true }],
+      },
+    ],
+  },
+  {
     year: "2026",
     seasons: [
       {
         name: "Spring",
         icon: asset("assets/8613c.svg"),
+        goals: [{ title: "Got married", tone: "neutral", marker: true }],
+      },
+      {
+        name: "Summer",
+        icon: asset("assets/37d90.svg"),
         goals: [
-          { title: "Got married", tone: "neutral", count: 2 },
+          {
+            title: "Finish the downstairs renovation",
+            tone: "navy",
+            image: asset("assets/2d5b4.png"),
+            private: true,
+          },
+        ],
+      },
+      {
+        name: "Autumn",
+        icon: asset("assets/14f26.svg"),
+        goals: [
           {
             title: "Build a home gym in the garage before winter starts",
             tone: "navy",
@@ -102,28 +128,15 @@ export const timeline = [
         ],
       },
       {
-        name: "Summer",
-        icon: asset("assets/37d90.svg"),
-        goals: [
-          {
-            title: "Dream vacation in Barcelona with the kids",
-            tone: "blue",
-            image: asset("assets/429f6.png"),
-            count: 2,
-          },
-        ],
-      },
-      { name: "Autumn", icon: asset("assets/14f26.svg"), goals: [] },
-      {
         name: "Winter",
         icon: asset("assets/97e01.svg"),
         active: true,
         goals: [
           {
-            title: "Dream vacation in Barcelona with the kids",
+            title: "Renovate the family bathroom",
             tone: "blue",
-            image: asset("assets/429f6.png"),
-            count: 2,
+            image: asset("assets/d90ac.png"),
+            count: 3,
           },
         ],
       },
@@ -137,20 +150,38 @@ export const timeline = [
         icon: asset("assets/8613c.svg"),
         goals: [
           {
-            title: "Build a home gym in the garage before winter starts",
-            tone: "navy",
-            image: asset("assets/61a48.png"),
-            private: true,
-            count: 2,
+            title: "Dream vacation in Barcelona with the kids",
+            tone: "blue",
+            image: asset("assets/429f6.png"),
+            count: 3,
           },
           {
-            title: "Build a home gym in the garage before winter starts",
-            tone: "navy",
-            image: asset("assets/61a48.png"),
-            private: true,
-            count: 2,
+            title: "Take a hot air balloon ride",
+            tone: "blue",
+            image: asset("assets/26b47.png"),
           },
         ],
+      },
+      {
+        name: "Summer",
+        icon: asset("assets/37d90.svg"),
+        goals: [
+          {
+            title: "Take the camper along the coast",
+            tone: "blue",
+            image: asset("assets/7ca0e.png"),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    year: "2055",
+    seasons: [
+      {
+        name: "Spring",
+        icon: asset("assets/8613c.svg"),
+        goals: [{ title: "Retire in Costa Rica", tone: "neutral", marker: true }],
       },
     ],
   },

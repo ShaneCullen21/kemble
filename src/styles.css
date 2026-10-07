@@ -66,7 +66,7 @@ img.milestone-owner.is-photo{object-fit:cover;padding:0;border:0;background:#e8d
 .funds-update svg{width:16px;height:16px}
 .funds-card{background:#fff;border:1px solid #ded9cf;border-radius:16px;flex-direction:column;gap:14px;padding:16px 20px;display:flex}
 .funds-row{align-items:center;justify-content:space-between;gap:12px;display:flex}
-.funds-row>span,.funds-monthly>span{color:#58678b;font-family:TT Commons\:Regular,Arial,sans-serif;font-size:14px;line-height:1.2}
+.funds-row>span,.funds-monthly>span{color:#58678b;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2}
 .funds-row strong{color:#384259;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500;line-height:1.2}
 .funds-row input{color:#384259;background:#fff;border:1px solid #ded9cf;border-radius:10px;width:108px;padding:8px 10px;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500;text-align:right}
 .funds-monthly{align-items:center;gap:8px;display:flex}
@@ -110,3 +110,5 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .chat-page{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 .milestone-count{align-items:center;gap:8px;display:flex}
 .milestone-count>span{color:#384259;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500;line-height:1}
+.timeline-card.is-marker{cursor:default}
+.season-line{left:11.5px;top:8px;bottom:8px}
