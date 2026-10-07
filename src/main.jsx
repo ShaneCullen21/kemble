@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { asset } from "./asset.js";
+import "./fonts.css";
 import "./styles.css";
 
 document.documentElement.style.setProperty(

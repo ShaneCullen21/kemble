@@ -1,0 +1,39 @@
+@font-face {
+  font-family: "TT Commons:Regular";
+  src: url("./fonts/TTCommons-Regular.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TT Commons:Medium";
+  src: url("./fonts/TTCommons-Medium.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TT Commons:DemiBold";
+  src: url("./fonts/TTCommons-DemiBold.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TT Commons:Bold";
+  src: url("./fonts/TTCommons-Bold.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Broadsheet:Italic";
+  src: url("./fonts/Broadsheet-Italic.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
