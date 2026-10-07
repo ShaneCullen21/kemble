@@ -9,8 +9,8 @@ const zoomThresholds = {
 
 export const cardSize = [
   { width: 140, height: 140 },
-  { width: 247, height: 349 },
-  { width: 360, height: 546 },
+  { width: 247, height: 394 },
+  { width: 360, height: 547 },
 ];
 
 const gap = 28;

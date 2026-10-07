@@ -17,6 +17,14 @@ function runViewTransition(update) {
   return null;
 }
 
+function formatMoney(amount) {
+  if (amount >= 1000) {
+    const thousands = Math.round((amount / 1000) * 10) / 10;
+    return `£${thousands}k`;
+  }
+  return `£${amount}`;
+}
+
 function GoalCard({ goal, position, level, onOpen, transitioning }) {
   const overview = level === 0;
   const className = [
@@ -60,14 +68,27 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
             <h2>{goal.title}</h2>
             <p className="goal-date">{goal.date}</p>
           </div>
+          {level === 1 && (
+            <div className="progress progress-inline">
+              <span>{goal.progress}%</span>
+              <div className="progress-track">
+                <span style={{ width: `${goal.progress}%` }} />
+              </div>
+            </div>
+          )}
           {level === 2 && (
-            <div className="progress">
-              <div>
-                <span>Progress</span>
-                <span>40%</span>
+            <div className="progress progress-focused">
+              <div className="goal-status">
+                <span>Progress · {goal.progress}%</span>
+                <span>
+                  {formatMoney(goal.funded)}/{formatMoney(goal.target)}
+                </span>
+                <span>
+                  {goal.milestonesDone}/{goal.milestonesTotal} Milestones
+                </span>
               </div>
               <div className="progress-track">
-                <span />
+                <span style={{ width: `${goal.progress}%` }} />
               </div>
             </div>
           )}
