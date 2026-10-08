@@ -4,10 +4,12 @@ import { asset } from "./asset.js";
 import { chatTopics, goals, milestoneGroups, timeline } from "./data.js";
 import {
   canvasOrigin,
+  canvasScale,
   cardPosition,
   cardSize,
   levelScale,
   maxZoom,
+  minZoom,
   zoomLevel,
 } from "./canvas.js";
 
@@ -25,7 +27,7 @@ function formatMoney(amount) {
   return `£${amount}`;
 }
 
-function GoalCard({ goal, position, level, onOpen, transitioning }) {
+function GoalCard({ goal, position, level, pinch, onOpen, transitioning }) {
   const overview = level === 0;
   const className = [
     "goal-card",
@@ -40,7 +42,10 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
   return (
     <article
       className={className}
-      style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
+      style={{
+        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+        "--pinch": pinch,
+      }}
       data-goal-id={goal.id}
       aria-label={`${goal.title}, ${goal.date}`}
       role="button"
@@ -78,17 +83,19 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
           )}
           {level === 2 && (
             <div className="progress progress-focused">
-              <div className="goal-status">
-                <span>Progress · {goal.progress}%</span>
+              <div className="goal-funds">
                 <span>
-                  {formatMoney(goal.funded)}/{formatMoney(goal.target)}
+                  {formatMoney(goal.funded)} of {formatMoney(goal.target)}
                 </span>
                 <span>
-                  {goal.milestonesDone}/{goal.milestonesTotal} · Milestones
+                  {goal.milestonesDone} of {goal.milestonesTotal} · To-dos
                 </span>
               </div>
-              <div className="progress-track">
-                <span style={{ width: `${goal.progress}%` }} />
+              <div className="progress progress-inline">
+                <span>{goal.progress}%</span>
+                <div className="progress-track">
+                  <span style={{ width: `${goal.progress}%` }} />
+                </div>
               </div>
             </div>
           )}
@@ -584,14 +591,14 @@ export default function App() {
     const onWheel = (event) => {
       event.preventDefault();
       const nextZoom = Math.max(
-        0.48,
+        minZoom,
         Math.min(maxZoom(window.innerWidth), zoom * Math.exp(-event.deltaY * 0.0015)),
       );
       const nextLevel = zoomLevel(level, nextZoom);
       const bounds = viewport.getBoundingClientRect();
       const pointer = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
-      const currentScale = zoom / levelScale[level];
-      const nextScale = nextZoom / levelScale[nextLevel];
+      const currentScale = canvasScale(zoom, level, window.innerWidth);
+      const nextScale = canvasScale(nextZoom, nextLevel, window.innerWidth);
       const worldPoint = {
         x: (pointer.x - origin.x) / currentScale,
         y: (pointer.y - origin.y) / currentScale,
@@ -686,7 +693,7 @@ export default function App() {
     pointers.current.set(event.pointerId, point);
     if (pointers.current.size === 2) {
       const center = pinchCenter();
-      const scale = zoom / levelScale[level];
+      const scale = canvasScale(zoom, level, window.innerWidth);
       const cardHit = nearestCard();
       gesture.current = {
         type: "pinch",
@@ -719,7 +726,7 @@ export default function App() {
     if (gesture.current.type === "pinch") {
       const startDistance = gesture.current.pinchDistance || 1;
       const nextZoom = Math.max(
-        0.48,
+        minZoom,
         Math.min(
           maxZoom(window.innerWidth),
           (gesture.current.pinchZoom || zoom) * (pinchDistance() / startDistance),
@@ -729,7 +736,7 @@ export default function App() {
       gesture.current.pinchLevel = nextLevel;
       const center = pinchCenter();
       const worldPoint = gesture.current.pinchWorldPoint;
-      const scale = nextZoom / levelScale[nextLevel];
+      const scale = canvasScale(nextZoom, nextLevel, window.innerWidth);
       const cardIndex = gesture.current.pinchCardIndex;
       const cardOffset = gesture.current.pinchCardOffset;
       if (cardIndex !== undefined && center && cardOffset) {
@@ -788,7 +795,7 @@ export default function App() {
   };
 
   openGoalRef.current = (goal) => openFromCanvas(goal, `canvas-${goal.id}`);
-  const scale = zoom / levelScale[level];
+  const scale = canvasScale(zoom, level, window.innerWidth);
 
   if (openGoal) {
     return (
@@ -884,6 +891,7 @@ export default function App() {
                 goal={goal}
                 position={cardPosition(index, level, scale)}
                 level={level}
+                pinch={zoom / levelScale[level]}
                 transitioning={transitionKey === `canvas-${goal.id}`}
                 onOpen={() => {
                   if (suppressClick.current) {

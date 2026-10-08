@@ -112,3 +112,36 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .milestone-count>span{color:#384259;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:16px;font-weight:500;line-height:1}
 .timeline-card.is-marker{cursor:default}
 .season-line{left:11.5px;top:8px;bottom:8px}
+
+.goal-card{width:240px;background:#485572;border-radius:24px}
+.goal-image{aspect-ratio:5/4;width:100%;height:auto;background:#efeee9;border:.5px solid #485572;border-radius:24px}
+.tone-navy .goal-image,.tone-blue .goal-image{border-color:#485572}
+.goal-card.is-overview,.goal-card.is-overview .goal-image{width:160px;height:160px;aspect-ratio:1}
+.goal-card.is-focused{width:360px}
+.goal-card.is-focused .goal-image{width:100%;height:auto;aspect-ratio:5/4}
+.count-badge,.tone-navy .count-badge{top:-22px;right:8px;left:auto;width:36px;height:36px;background:#8bb0ec;color:#384259;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:12px;font-weight:500}
+.goal-card.is-overview .count-badge{right:0}
+.private-badge{top:16px;left:16px;right:auto;height:34px;gap:4px;padding:6px 8px;border-radius:12px;background:#58678b;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:14px;font-weight:700;line-height:22px}
+.goal-card.is-focused .private-badge{font-size:16px}
+.goal-card.is-overview .private-badge{top:-7px;left:-9px;width:36px;height:36px;padding:0;border-radius:50%;background:#58678b}
+.goal-details,.tone-navy .goal-details,.tone-blue .goal-details{z-index:1;gap:12px;margin-top:-24px;padding:40px 20px 16px;border-radius:24px;background:#485572;color:#fff}
+.goal-summary{gap:12px}
+.goal-card.is-focused .goal-summary{gap:8px}
+.goal-details h2{color:#fff;font-size:24px;font-weight:500;line-height:32px;-webkit-line-clamp:2}
+.goal-card.is-focused .goal-details h2{font-size:32px;line-height:40px}
+.goal-date{color:#fff;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:18px;font-weight:500;line-height:24px}
+.goal-funds{justify-content:space-between;align-items:baseline;gap:8px;width:100%;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:16px;font-weight:700;line-height:22px;display:flex}
+.goal-funds span:last-child{text-align:right}
+.progress-inline,.goal-card .progress-inline{gap:8px;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:16px;font-weight:700;line-height:22px}
+.progress-focused{gap:8px}
+.goal-card .progress-track{background:#fff;height:12px}
+.goal-card .progress-track span,.tone-navy .progress-track span{background:#9bbcef}
+.goal-details h2,
+.goal-date,
+.goal-funds,
+.progress-inline>span,
+.private-badge,
+.count-badge{zoom:calc(1 / var(--pinch, 1))}
+.count-badge,.tone-navy .count-badge{top:calc(-22px / var(--pinch, 1));right:calc(8px / var(--pinch, 1))}
+.goal-card.is-overview .count-badge{right:0}
+.private-badge{top:calc(16px / var(--pinch, 1));left:calc(16px / var(--pinch, 1))}

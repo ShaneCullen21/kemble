@@ -1,29 +1,46 @@
-export const levelScale = [0.57, 1, 1.46];
+export const REFERENCE_WIDTH = 390;
+
+// Resting zoom for each card, relative to the compact card at its drawn width.
+export const levelScale = [160 / 240, 1, 360 / 240];
+
+// Each card scales from 0.75× to 1.25× its drawn size before the layout changes.
+// Focused stops at the drawn width, and also at the screen width minus 32px.
+export const minZoom = levelScale[0] * 0.75;
 
 const zoomThresholds = {
-  thumbnailToDefault: (170 / 140) * levelScale[0],
-  defaultToThumbnail: 0.6,
-  defaultToFocused: 310 / 247,
-  focusedToDefault: 1.22,
+  thumbnailToDefault: levelScale[0] * 1.25,
+  defaultToThumbnail: 0.75,
+  defaultToFocused: 1.25,
+  focusedToDefault: levelScale[2] * 0.75,
 };
 
 export const cardSize = [
-  { width: 140, height: 140 },
-  { width: 247, height: 397 },
-  { width: 360, height: 550 },
+  { width: 160, height: 160 },
+  { width: 240, height: 358 },
+  { width: 360, height: 500 },
 ];
 
 const gap = 28;
 
+export function deviceScale(viewportWidth) {
+  return viewportWidth / REFERENCE_WIDTH;
+}
+
+export function canvasScale(zoom, level, viewportWidth) {
+  return deviceScale(viewportWidth) * (zoom / levelScale[level]);
+}
+
 export function canvasOrigin(level, viewportWidth) {
-  const width = cardSize[level].width;
-  const span = level === 0 ? width * 2 + gap : width;
-  return { x: Math.max(15, (viewportWidth - span) / 2), y: 20 };
+  const scale = canvasScale(levelScale[level], level, viewportWidth);
+  const width = cardSize[level].width * scale;
+  const span = level === 0 ? width * 2 + gap * scale : width;
+  return { x: Math.max(16 * deviceScale(viewportWidth), (viewportWidth - span) / 2), y: 20 };
 }
 
 export function maxZoom(viewportWidth) {
+  const u = deviceScale(viewportWidth);
   const available = Math.max(1, viewportWidth - 32);
-  return Math.min(1.68, (available / cardSize[2].width) * levelScale[2]);
+  return Math.min(cardSize[2].width * u, available) / (cardSize[1].width * u);
 }
 
 export function cardPosition(index, level, scale) {
