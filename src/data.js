@@ -181,7 +181,7 @@ export const timeline = [
       {
         name: "Spring",
         icon: asset("assets/8613c.svg"),
-        goals: [{ title: "Retire in Costa Rica", tone: "neutral", marker: true }],
+        goals: [{ title: "Retire in Costa Rica", tone: "navy" }],
       },
     ],
   },
@@ -256,6 +256,7 @@ export const milestoneGroups = [
     title: "Get ready to go",
     status: "Yet to come",
     tone: "later",
+    count: 5,
     items: [
       { title: "Make a packing list", done: false, owner: "AB" },
       { title: "Sort passports and insurance", done: false, owner: "photo" },

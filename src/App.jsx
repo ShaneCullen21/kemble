@@ -110,7 +110,7 @@ function TimelineCard({ goal, onOpen, transitioning }) {
   const marker = goal.marker;
   return (
     <article
-      className={`timeline-card${marker ? " is-marker" : ""} ${transitioning ? "is-transitioning" : ""} timeline-${goal.tone}`}
+      className={`timeline-card${marker ? " is-marker timeline-neutral" : ""} ${transitioning ? "is-transitioning" : ""}`}
       role={marker ? undefined : "button"}
       tabIndex={marker ? undefined : 0}
       onClick={marker ? undefined : onOpen}
@@ -190,7 +190,7 @@ function Timeline({ onOpenGoal, transitioningGoalKey }) {
 
 function GoalPage({ goal, onClose }) {
   const [openMilestones, setOpenMilestones] = useState(() =>
-    milestoneGroups.filter((group) => group.tone === "tracking").map((group) => group.title),
+    milestoneGroups.filter((group) => group.tone === "done").map((group) => group.title),
   );
   const milestonesDone = milestoneGroups.filter((group) => group.tone === "done").length;
   const milestonesTotal = milestoneGroups.length;
@@ -203,13 +203,6 @@ function GoalPage({ goal, onClose }) {
   const fundsPercent = goalFunds > 0 ? Math.min(100, Math.round((savedFunds / goalFunds) * 100)) : 0;
   const [chat, setChat] = useState(null);
   const openChat = (title) => setChat({ title });
-  const scrollToSection = (id) => {
-    const target = document.getElementById(id);
-    const scroller = target?.closest(".goal-page");
-    if (!target || !scroller) return;
-    const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
-    scroller.scrollTo({ top: Math.max(0, top - scroller.clientHeight * 0.28), behavior: "smooth" });
-  };
   const toggleFundsEdit = () => {
     if (!editingFunds) {
       setSavedDraft(String(savedFunds));
@@ -231,208 +224,60 @@ function GoalPage({ goal, onClose }) {
   return (
     <div className="goal-page">
       <div className="goal-page-hero">
-        <div className="goal-page-shared-media">
-          <img
-            className="goal-page-hero-background"
-            src={goal.image || asset("assets/d90ac.png")}
-            alt=""
-          />
-          <img
-            className="goal-page-transition-image"
-            src={goal.image || asset("assets/d90ac.png")}
-            alt=""
-          />
-          {goal.private && (
-            <span className="goal-page-private">
-              <img src={asset("assets/ca787.svg")} alt="" />
-              Private
-            </span>
-          )}
+        <img
+          className="goal-page-hero-background"
+          src={goal.image || asset("assets/429f6.png")}
+          alt=""
+        />
+        <img
+          className="goal-page-transition-image"
+          src={goal.image || asset("assets/429f6.png")}
+          alt=""
+        />
+        <div className="goal-page-hero-bar">
+          <button className="goal-page-back" onClick={onClose} aria-label="Back">
+            <img src={asset("assets/982d7.svg")} alt="" />
+          </button>
+          <span className="goal-page-private">
+            <img src={asset("assets/ca787.svg")} alt="" />
+            Private
+          </span>
         </div>
-        <button className="goal-page-back" onClick={onClose} aria-label="Back">
-          <img src={asset("assets/982d7.svg")} alt="" />
-        </button>
       </div>
       <div className="goal-page-sheet">
         <div className="goal-page-sheet-backdrop" aria-hidden="true" />
-        <section className="goal-page-summary">
-          <div className="goal-page-heading">
-            <span className="goal-page-date">{goal.date}</span>
-            <h1>{goal.title}</h1>
-          </div>
-          <div className="goal-page-progress">
-            <h2>Progress</h2>
-            <button
-              type="button"
-              className="goal-stat-card"
-              aria-label="Go to milestones"
-              onClick={() => scrollToSection("milestones")}
-            >
-              <div>
-                <span>Milestones achieved</span>
-                <strong>{milestonesDone} of {milestonesTotal}</strong>
-              </div>
-              <div className="goal-dots-row">
-                <div className="goal-dots">
-                  {Array.from({ length: milestonesTotal }, (_, index) => (
-                    <i key={index} className={index < milestonesDone ? "is-filled" : ""} />
-                  ))}
-                </div>
-                <span className="goal-dots-jump" aria-hidden="true">
-                  <img src={asset("assets/076ec.svg")} alt="" />
-                </span>
-              </div>
-            </button>
-            <button
-              type="button"
-              className="goal-stat-card"
-              aria-label="Go to funds"
-              onClick={() => document.getElementById("funds")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-            >
-              <div>
-                <span>Funds</span>
-                <strong>{formatMoney(savedFunds)}/{formatMoney(goalFunds)}</strong>
-              </div>
-              <div className="goal-dots-row">
-                <div className="goal-funds-track">
-                  <i style={{ width: `${fundsPercent}%` }} />
-                </div>
-                <span className="goal-dots-jump" aria-hidden="true">
-                  <img src={asset("assets/076ec.svg")} alt="" />
-                </span>
-              </div>
-            </button>
-          </div>
-        </section>
         <div className="goal-page-body">
-          <section className="goal-copy-section">
-            <h2>The everyday discrete luxury</h2>
-            <p>
-              Spain · about two weeks in Summer 2027.
-              <br />
-              Exact dates still open — that’s the next call. A chance to slow down, reset, and make this goal feel real.
+          <section className="goal-page-details">
+            <p className="goal-page-date">Summer · 2027</p>
+            <h1>Dream vacation in Spain with the kids</h1>
+            <p className="goal-page-description">
+              Vacation trip to Spain next summer. Exact dates still open, that’s the next call. Alex is keen for the beach and you really want some relax time. Together you decided to plan visits to Madrid, Toledo and Barcelona. We still need to lock in how long you want to spend in each city, and begin brainstorming plan some activities for each.
             </p>
-          </section>
-          <section className="goal-copy-section">
-            <h2>Next up</h2>
-            <div
-              className="goal-next-input"
-              role="button"
-              tabIndex={0}
-              onClick={() => openChat("Let’s pick the dates")}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") openChat("Let’s pick the dates");
-              }}
-            >
-              <span>Let’s pick the dates</span>
-              <span className="goal-next-send" aria-hidden="true">
-                <img src={asset("assets/7644f.svg")} alt="" />
-              </span>
-            </div>
-          </section>
-          <section className="goal-copy-section">
-            <h2>Recommended next steps</h2>
-            <div className="recommendation-grid">
-              <button className="recommendation-light" onClick={() => openChat("Check leave with work")}>
-                <span>Check leave with work</span>
-                <img src={asset("assets/eb16c.svg")} alt="" />
-              </button>
-              <button className="recommendation-dark" onClick={() => openChat("Create an automation for building funds")}>
-                <span>Create an automation for building funds</span>
-                <img src={asset("assets/eb16c.svg")} alt="" />
-              </button>
-            </div>
-          </section>
-          <section className="milestone-panel" id="milestones">
-            <div className="funds-heading">
-              <h2>Milestones</h2>
-              <div className="milestone-count">
-                <div className="goal-dots" aria-hidden="true">
-                  {Array.from({ length: milestonesTotal }, (_, index) => (
-                    <i key={index} className={index < milestonesDone ? "is-filled" : ""} />
-                  ))}
-                </div>
-                <span>{milestonesDone}/{milestonesTotal}</span>
-              </div>
-            </div>
-            {milestoneGroups.map((group) => {
-              const open = openMilestones.includes(group.title);
-              return (
-              <div className={`milestone-group is-${group.tone}${open ? " is-open" : ""}`} key={group.title}>
-                <button
-                  type="button"
-                  className="milestone-group-head"
-                  aria-expanded={open}
-                  onClick={() => toggleMilestone(group.title)}
-                >
-                  <span className={`milestone-check ${group.tone === "done" ? "is-done" : ""}`} />
-                  <span className="milestone-group-title">{group.title}</span>
-                  <span className="milestone-group-meta">
-                    <span className="milestone-group-status">{group.tone === "later" ? `${group.status} (${group.items.length})` : group.status}</span>
-                    <img
-                      className="milestone-toggle"
-                      src={asset("assets/076ec.svg")}
-                      alt=""
-                    />
-                  </span>
-                </button>
-                {open && <div className="milestone-group-body">
-                  <span className="milestone-line" />
-                  <div className="milestone-cards">
-                    {group.items.map((item) => {
-                      const CardTag = item.done ? "div" : "button";
-                      return (
-                      <CardTag
-                        key={item.title}
-                        type={item.done ? undefined : "button"}
-                        className={`milestone-card ${item.done ? "is-done" : "is-open-action"}`}
-                        onClick={item.done ? undefined : () => openChat(item.title)}
-                      >
-                        <span className={`milestone-check ${item.done ? "is-done" : ""}`} />
-                        <span className="milestone-card-copy">
-                          <span>{item.title}</span>
-                          {item.detail && <strong>{item.detail}</strong>}
-                        </span>
-                        {item.owner === "photo" ? (
-                          <img className="milestone-owner is-photo" src={asset("assets/avatar-photo.png")} alt="" />
-                        ) : item.owner ? (
-                          <span className="milestone-owner">{item.owner}</span>
-                        ) : null}
-                      </CardTag>
-                      );
-                    })}
-                  </div>
-                </div>}
-              </div>
-              );
-            })}
           </section>
           <section className="funds-panel" id="funds">
             <div className="funds-heading">
-              <h2>Funds</h2>
+              <h2>Budget</h2>
               <button
                 type="button"
                 className="funds-update"
                 aria-label="Update funds"
-                onClick={() => openChat("Update funds")}
+                onClick={toggleFundsEdit}
               >
                 {editingFunds ? (
                   <svg viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M3.2 8.4 6.3 11.5 12.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 ) : (
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z" />
-                  </svg>
+                  <img src={asset("assets/goal-edit.svg")} alt="" />
                 )}
               </button>
             </div>
             <div className="funds-card">
-              <div className="funds-row">
+              <div className="funds-row is-goal">
                 <span>Goal</span>
                 <strong>{formatMoney(goalFunds)}</strong>
               </div>
-              <div className="funds-row">
+              <div className="funds-row is-saved">
                 <span>Saved so far</span>
                 {editingFunds ? (
                   <input
@@ -445,7 +290,7 @@ function GoalPage({ goal, onClose }) {
                   <strong>{formatMoney(savedFunds)}</strong>
                 )}
               </div>
-              <div className="funds-row">
+              <div className="funds-row is-monthly">
                 <span>Putting away</span>
                 {editingFunds ? (
                   <label className="funds-monthly">
@@ -466,12 +311,91 @@ function GoalPage({ goal, onClose }) {
               </div>
             </div>
           </section>
-          <section className="goal-copy-section goal-chat">
-            <h2>Chats</h2>
+          <section className="todo-panel" id="milestones">
+            <div className="funds-heading">
+              <h2>To-do list</h2>
+              <div className="todo-heading-meta">
+                <div className="todo-dots" aria-hidden="true">
+                  {["#384259", "#384259", "#384259", "#384259", "#384259", "#4e84e2", "#aab3c6", "#aab3c6", "#aab3c6", "#aab3c6"].map((color, index) => (
+                    <i key={index} style={{ background: color }} />
+                  ))}
+                </div>
+                <img className="todo-edit" src={asset("assets/goal-edit.svg")} alt="" />
+              </div>
+            </div>
+            <div className="todo-card">
+              {milestoneGroups.map((group) => {
+                const open = openMilestones.includes(group.title);
+                const radio = group.tone === "done"
+                  ? "assets/goal-radio-done.svg"
+                  : group.tone === "tracking"
+                    ? "assets/goal-radio-tracking.svg"
+                    : "assets/goal-radio-later.svg";
+                return (
+                  <div className={`milestone-group is-${group.tone}${open ? " is-open" : ""}`} key={group.title}>
+                    <button
+                      type="button"
+                      className="milestone-group-head"
+                      aria-expanded={open}
+                      onClick={() => toggleMilestone(group.title)}
+                    >
+                      <img className="milestone-radio" src={asset(radio)} alt="" />
+                      <span className="milestone-group-title">{group.title}</span>
+                      <span className="milestone-group-meta">
+                        <span className="milestone-group-status">{group.tone === "done" ? "Done" : group.count ?? group.items.length}</span>
+                        <img
+                          className="milestone-toggle"
+                          src={asset(open ? "assets/goal-chevron-up.svg" : "assets/goal-chevron-down.svg")}
+                          alt=""
+                        />
+                      </span>
+                    </button>
+                    {open && (
+                      <div className="milestone-group-body">
+                        <span className="milestone-line" />
+                        <div className="milestone-cards">
+                          {group.items.map((item) => (
+                            <button
+                              key={item.title}
+                              type="button"
+                              className="milestone-card"
+                              onClick={() => openChat(item.title)}
+                            >
+                              <span
+                                className={`milestone-circle${item.done ? " is-done" : group.tone === "tracking" ? " is-next" : " is-later"}`}
+                              />
+                              <span className="milestone-card-copy">
+                                <span>{item.title}</span>
+                                {item.detail && <strong>{item.detail}</strong>}
+                              </span>
+                              {item.owner === "photo" ? (
+                                <img className="milestone-owner is-photo" src={asset("assets/avatar-photo.png")} alt="" />
+                              ) : item.owner ? (
+                                <span className="milestone-owner">{item.owner}</span>
+                              ) : null}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+          <section className="kemble-suggests">
+            <h2>Kemble suggests</h2>
+            <p>Increase surplus allocation by £50 to finish 2 months early.</p>
+            <button type="button" onClick={() => openChat("Increase surplus allocation by £50 to finish 2 months early.")}>
+              Chat
+            </button>
+          </section>
+          <section className="goal-chat">
+            <h2>Chat history</h2>
             {chatTopics.map((topic) => (
-              <button key={topic} onClick={() => openChat(topic)}>
+              <button key={topic} type="button" onClick={() => openChat(topic)}>
                 <span>{topic}</span>
-                <img src={asset("assets/076ec.svg")} alt="" />
+                <img src={asset("assets/goal-chevron-right.svg")} alt="" />
               </button>
             ))}
           </section>
@@ -579,7 +503,6 @@ export default function App() {
   const [level, setLevel] = useState(1);
   const [zoom, setZoom] = useState(levelScale[1]);
   const [view, setView] = useState("canvas");
-  const [menuOpen, setMenuOpen] = useState(false);
   const [openGoal, setOpenGoal] = useState(null);
   const [transitionKey, setTransitionKey] = useState(null);
   const [origin, setOrigin] = useState(() =>
@@ -824,50 +747,29 @@ export default function App() {
           <p className="date-label">TUE 11 AUGUST</p>
           <h1>Life</h1>
         </div>
-        <button
-          className="canvas-pill"
-          type="button"
-          aria-expanded={menuOpen}
-          aria-haspopup="menu"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <img src={asset("assets/4fb4f.svg")} alt="" />
-          <span>{view === "canvas" ? "Canvas" : "Timeline"}</span>
-        </button>
-      </header>
-      {menuOpen && (
-        <>
+        <div className="view-nav" role="tablist" aria-label="Life view">
           <button
-            className="view-menu-scrim"
-            aria-label="Close view menu"
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="view-menu" role="menu">
-            <button
-              className={view === "canvas" ? "active" : ""}
-              role="menuitem"
-              onClick={() => {
-                setView("canvas");
-                setMenuOpen(false);
-              }}
-            >
-              <img src={asset("assets/2d278.svg")} alt="" />
-              <span>Canvas</span>
-            </button>
-            <button
-              className={view === "timeline" ? "active" : ""}
-              role="menuitem"
-              onClick={() => {
-                setView("timeline");
-                setMenuOpen(false);
-              }}
-            >
-              <img src={asset("assets/d240d.svg")} alt="" />
-              <span>Timeline</span>
-            </button>
-          </div>
-        </>
-      )}
+            className={view === "canvas" ? "active" : ""}
+            type="button"
+            role="tab"
+            aria-selected={view === "canvas"}
+            aria-label="Canvas"
+            onClick={() => setView("canvas")}
+          >
+            <img src={asset(view === "canvas" ? "assets/view-canvas-active.svg" : "assets/view-canvas.svg")} alt="" />
+          </button>
+          <button
+            className={view === "timeline" ? "active" : ""}
+            type="button"
+            role="tab"
+            aria-selected={view === "timeline"}
+            aria-label="Timeline"
+            onClick={() => setView("timeline")}
+          >
+            <img src={asset(view === "timeline" ? "assets/view-timeline-active.svg" : "assets/view-timeline.svg")} alt="" />
+          </button>
+        </div>
+      </header>
       {transitionKey && (
         <div className="goal-control-transition-anchors" aria-hidden="true">
           <span className="goal-back-transition-anchor" />
