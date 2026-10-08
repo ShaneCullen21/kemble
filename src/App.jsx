@@ -86,6 +86,12 @@ function GoalCard({ goal, position, level, scale, onOpen, transitioning }) {
           )}
           {level === 2 && (
             <div className="progress progress-focused">
+              <div className="progress progress-inline">
+                <span>{goal.progress}%</span>
+                <div className={`progress-track${goal.progress >= 90 ? " is-complete" : ""}`}>
+                  <span style={{ width: `${goal.progress}%` }} />
+                </div>
+              </div>
               <div className="goal-funds">
                 <span>
                   {formatMoney(goal.funded)} of {formatMoney(goal.target)}
@@ -93,12 +99,6 @@ function GoalCard({ goal, position, level, scale, onOpen, transitioning }) {
                 <span>
                   {milestonesDone} of {milestonesTotal} · To-dos
                 </span>
-              </div>
-              <div className="progress progress-inline">
-                <span>{goal.progress}%</span>
-                <div className={`progress-track${goal.progress >= 90 ? " is-complete" : ""}`}>
-                  <span style={{ width: `${goal.progress}%` }} />
-                </div>
               </div>
             </div>
           )}

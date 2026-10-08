@@ -121,8 +121,10 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .tone-navy .goal-image,.tone-blue .goal-image{border-color:#485572}
 .goal-card.is-overview{width:160px;height:160px}
 .goal-card.is-overview .goal-image{width:100%;height:auto;aspect-ratio:1}
+.goal-card.is-focused,.goal-card.is-focused .goal-image,.goal-card.is-focused .goal-details{height:auto;max-height:none}
 .goal-card.is-focused{width:360px}
-.goal-card.is-focused .goal-image{width:100%;height:auto;aspect-ratio:5/4}
+.goal-card.is-focused .goal-image{width:100%;aspect-ratio:5/4}
+.goal-card.is-focused .goal-details{gap:16px}
 .count-badge,.tone-navy .count-badge{top:-6px;right:-8px;left:auto;width:36px;height:36px;background:#8bb0ec;color:#384259;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:max(12px, calc(12px / var(--s, 1)));font-weight:500;line-height:1}
 .goal-card.is-overview .count-badge{top:-14px}
 .private-badge{top:16px;left:16px;right:auto;height:34px;gap:4px;padding:6px 8px;border-radius:12px;background:#637193;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:max(14px, calc(12px / var(--s, 1)));font-weight:700;line-height:1.57}
@@ -130,7 +132,7 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .goal-card.is-focused .private-badge{font-size:max(16px, calc(12px / var(--s, 1)));line-height:1.375}
 .goal-card.is-overview .private-badge{top:8px;left:8px;width:26px;height:26px;padding:0;border-radius:12px;justify-content:center;gap:0;background:#637193}
 .goal-card.is-overview .private-badge img{width:14px;height:14px}
-.goal-details,.tone-navy .goal-details,.tone-blue .goal-details{z-index:1;gap:12px;margin-top:-24px;padding:40px 20px 16px;border-radius:24px;background:#485572;color:#fff}
+.goal-details,.tone-navy .goal-details,.tone-blue .goal-details{z-index:1;gap:12px;margin-top:-24px;padding:40px 20px 16px;border-radius:24px;background:#485572;color:#fff;box-shadow:0 -4px 8px #2026322e}
 .goal-summary{gap:12px}
 .goal-details h2{color:#fff;font-size:max(24px, calc(12px / var(--s, 1)));font-weight:500;line-height:1.333;-webkit-line-clamp:2}
 .goal-card.is-focused .goal-details h2{font-size:max(32px, calc(12px / var(--s, 1)));line-height:1.25}
@@ -150,11 +152,11 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .goal-page-private{position:static;top:auto;right:auto;height:34px;width:auto;background:#637193;border-radius:12px;gap:4px;padding:6px 8px;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:16px;font-weight:700;line-height:22px}
 .goal-page-private img{width:14px;height:14px}
 .goal-page-sheet{margin-top:-72px}
-.goal-page-sheet-backdrop{background:#dde9fa;background-image:none;border-radius:24px 24px 0 0;box-shadow:none}
+.goal-page-sheet-backdrop{background:#dde9fa;background-image:none;border-radius:24px 24px 0 0;box-shadow:0 -4px 20px #0003}
 .goal-page-body{z-index:1;flex-direction:column;gap:48px;padding:16px 20px 32px;display:flex;position:relative}
 .goal-page-details{flex-direction:column;gap:16px;display:flex}
-.goal-page-date{color:#384259;background:none;border-radius:0;align-self:stretch;margin:0;padding:0;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:16px;font-weight:700;line-height:22px;text-align:right}
-.goal-page-details h1{color:#202632;margin:0;font-family:Broadsheet\:Italic,EB Garamond\:Italic,Georgia,serif;font-size:40px;font-style:italic;font-weight:400;line-height:48px}
+.goal-page-date{color:#384259;background:none;border-radius:0;align-self:stretch;margin:0;padding:0;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:18px;font-weight:500;line-height:24px;text-align:right}
+.goal-page-details h1{color:#202632;margin:0;font-family:Broadsheet\:Italic,EB Garamond\:Italic,Georgia,serif;font-size:48px;font-style:italic;font-weight:400;line-height:52px}
 .goal-page-description{color:#384259;margin:0;font-family:Broadsheet\:Italic,EB Garamond\:Italic,Georgia,serif;font-size:20px;font-style:italic;font-weight:400;line-height:24px}
 .goal-page .funds-heading h2,.todo-panel .funds-heading h2,.goal-chat h2{color:#202632;margin:0;font-family:Broadsheet\:Italic,EB Garamond\:Italic,Georgia,serif;font-size:32px;font-style:italic;font-weight:400;line-height:40px}
 .funds-panel,.todo-panel,.goal-chat{flex-direction:column;gap:16px;display:flex}
