@@ -3,14 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { asset } from "./asset.js";
 import { chatTopics, goals, milestoneGroups, timeline } from "./data.js";
 import {
+  MIN_CARD_WIDTH,
   canvasOrigin,
-  canvasScale,
+  cardMetrics,
   cardPosition,
-  cardSize,
-  levelScale,
-  maxZoom,
-  minZoom,
-  zoomLevel,
+  deviceScale,
+  layoutFor,
+  maxCardWidth,
 } from "./canvas.js";
 
 function runViewTransition(update) {
@@ -27,7 +26,8 @@ function formatMoney(amount) {
   return `£${amount}`;
 }
 
-function GoalCard({ goal, position, level, onOpen, transitioning }) {
+function GoalCard({ goal, position, metrics, onOpen, transitioning }) {
+  const level = metrics.level;
   const overview = level === 0;
   const className = [
     "goal-card",
@@ -42,7 +42,33 @@ function GoalCard({ goal, position, level, onOpen, transitioning }) {
   return (
     <article
       className={className}
-      style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
+      style={{
+        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+        width: metrics.width,
+        "--radius": `${metrics.radius}px`,
+        "--pad": `${metrics.pad}px`,
+        "--gap": `${metrics.gap}px`,
+        "--title": `${metrics.title}px`,
+        "--title-lh": `${metrics.titleLh}px`,
+        "--season": `${metrics.season}px`,
+        "--season-lh": `${metrics.seasonLh}px`,
+        "--stat": `${metrics.stat}px`,
+        "--stat-lh": `${metrics.statLh}px`,
+        "--chip": `${metrics.chip}px`,
+        "--chip-lh": `${metrics.chipLh}px`,
+        "--chip-x": `${metrics.chipX}px`,
+        "--chip-y": `${metrics.chipY}px`,
+        "--chip-w": `${metrics.chipW}px`,
+        "--chip-h": `${metrics.chipH}px`,
+        "--chip-r": `${metrics.chipR}px`,
+        "--badge": `${metrics.badge}px`,
+        "--badge-lh": `${metrics.badgeLh}px`,
+        "--badge-size": `${metrics.badgeSize}px`,
+        "--badge-y": `${metrics.badgeY}px`,
+        "--badge-right": `${metrics.badgeRight}px`,
+        "--lock": `${metrics.lock}px`,
+        "--bar": `${metrics.bar}px`,
+      }}
       data-goal-id={goal.id}
       aria-label={`${goal.title}, ${goal.date}`}
       role="button"
@@ -573,13 +599,13 @@ export default function App() {
   const openGoalRef = useRef(() => {});
   const suppressClick = useRef(false);
   const [level, setLevel] = useState(1);
-  const [zoom, setZoom] = useState(levelScale[1]);
+  const [zoom, setZoom] = useState(220);
   const [view, setView] = useState("canvas");
   const [menuOpen, setMenuOpen] = useState(false);
   const [openGoal, setOpenGoal] = useState(null);
   const [transitionKey, setTransitionKey] = useState(null);
   const [origin, setOrigin] = useState(() =>
-    canvasOrigin(1, typeof window === "undefined" ? 390 : window.innerWidth),
+    canvasOrigin(220, typeof window === "undefined" ? 390 : window.innerWidth),
   );
 
   useEffect(() => {
@@ -588,14 +614,14 @@ export default function App() {
     const onWheel = (event) => {
       event.preventDefault();
       const nextZoom = Math.max(
-        minZoom,
-        Math.min(maxZoom(window.innerWidth), zoom * Math.exp(-event.deltaY * 0.0015)),
+        MIN_CARD_WIDTH,
+        Math.min(maxCardWidth(window.innerWidth), zoom * Math.exp(-event.deltaY * 0.0015)),
       );
-      const nextLevel = zoomLevel(level, nextZoom);
+      const nextLevel = layoutFor(nextZoom, level);
       const bounds = viewport.getBoundingClientRect();
       const pointer = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
-      const currentScale = canvasScale(zoom, level, window.innerWidth);
-      const nextScale = canvasScale(nextZoom, nextLevel, window.innerWidth);
+      const currentScale = deviceScale(window.innerWidth);
+      const nextScale = currentScale;
       const worldPoint = {
         x: (pointer.x - origin.x) / currentScale,
         y: (pointer.y - origin.y) / currentScale,
@@ -616,8 +642,8 @@ export default function App() {
           x: (event.clientX - rect.left) / rect.width,
           y: (event.clientY - rect.top) / rect.height,
         };
-        const position = cardPosition(cardIndex, nextLevel, nextScale);
-        const size = cardSize[nextLevel];
+        const position = cardPosition(cardIndex, cardMetrics(nextZoom, nextLevel));
+        const size = cardMetrics(nextZoom, nextLevel);
         setOrigin({
           x: pointer.x - (position.x + ratio.x * size.width) * nextScale,
           y: pointer.y - (position.y + ratio.y * size.height) * nextScale,
@@ -637,12 +663,12 @@ export default function App() {
 
   useEffect(() => {
     const onResize = () => {
-      setOrigin(canvasOrigin(level, window.innerWidth));
-      setZoom((current) => Math.min(current, maxZoom(window.innerWidth)));
+      setOrigin(canvasOrigin(zoom, window.innerWidth));
+      setZoom((current) => Math.min(current, maxCardWidth(window.innerWidth)));
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, [level]);
+  }, [zoom]);
 
   const pinchDistance = () => {
     const [first, second] = [...pointers.current.values()];
@@ -690,7 +716,7 @@ export default function App() {
     pointers.current.set(event.pointerId, point);
     if (pointers.current.size === 2) {
       const center = pinchCenter();
-      const scale = canvasScale(zoom, level, window.innerWidth);
+      const scale = deviceScale(window.innerWidth);
       const cardHit = nearestCard();
       gesture.current = {
         type: "pinch",
@@ -723,22 +749,22 @@ export default function App() {
     if (gesture.current.type === "pinch") {
       const startDistance = gesture.current.pinchDistance || 1;
       const nextZoom = Math.max(
-        minZoom,
+        MIN_CARD_WIDTH,
         Math.min(
-          maxZoom(window.innerWidth),
+          maxCardWidth(window.innerWidth),
           (gesture.current.pinchZoom || zoom) * (pinchDistance() / startDistance),
         ),
       );
-      const nextLevel = zoomLevel(gesture.current.pinchLevel ?? level, nextZoom);
+      const nextLevel = layoutFor(nextZoom, gesture.current.pinchLevel ?? level);
       gesture.current.pinchLevel = nextLevel;
       const center = pinchCenter();
       const worldPoint = gesture.current.pinchWorldPoint;
-      const scale = canvasScale(nextZoom, nextLevel, window.innerWidth);
+      const scale = deviceScale(window.innerWidth);
       const cardIndex = gesture.current.pinchCardIndex;
       const cardOffset = gesture.current.pinchCardOffset;
       if (cardIndex !== undefined && center && cardOffset) {
-        const position = cardPosition(cardIndex, nextLevel, scale);
-        const size = cardSize[nextLevel];
+        const position = cardPosition(cardIndex, cardMetrics(nextZoom, nextLevel));
+        const size = cardMetrics(nextZoom, nextLevel);
         setOrigin({
           x: center.x + cardOffset.x - (position.x + size.width / 2) * scale,
           y: center.y + cardOffset.y - (position.y + size.height / 2) * scale,
@@ -792,7 +818,8 @@ export default function App() {
   };
 
   openGoalRef.current = (goal) => openFromCanvas(goal, `canvas-${goal.id}`);
-  const scale = canvasScale(zoom, level, window.innerWidth);
+  const scale = deviceScale(window.innerWidth);
+  const metrics = cardMetrics(zoom, level);
 
   if (openGoal) {
     return (
@@ -886,8 +913,8 @@ export default function App() {
               <GoalCard
                 key={goal.id}
                 goal={goal}
-                position={cardPosition(index, level, scale)}
-                level={level}
+                position={cardPosition(index, metrics)}
+                metrics={metrics}
                 transitioning={transitionKey === `canvas-${goal.id}`}
                 onOpen={() => {
                   if (suppressClick.current) {
