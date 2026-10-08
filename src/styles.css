@@ -213,3 +213,18 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .goal-card .progress-track.is-complete span,.goal-funds-track.is-complete i{background:#d5f784}
 .milestone-group-title,.milestone-group-status{font-family:TT Commons\:Medium,Arial,sans-serif;font-size:18px;font-weight:500;line-height:24px}
 .milestone-card-copy span{font-family:TT Commons\:Regular,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.1}
+.funds-row input,.funds-row select{box-sizing:border-box;color:inherit;background:#fff;border:1px solid #c3c9d6;border-radius:10px;height:32px;padding:4px 8px;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:16px;font-weight:700;line-height:22px}
+.funds-row input{width:88px;text-align:right}
+.funds-row.is-goal input{color:#58678b}
+.funds-row.is-saved input{color:#384259}
+.funds-monthly{gap:6px}
+.funds-monthly input{width:72px}
+.funds-row.is-monthly input,.funds-row.is-monthly select,.funds-row.is-monthly .funds-monthly>span{color:#4e84e2}
+.funds-monthly select{width:auto;padding-right:4px}
+.milestone-group-head input.milestone-group-title{box-sizing:border-box;min-width:0;height:32px;padding:2px 8px;border:1px solid #c3c9d6;border-radius:8px;background:#fff}
+.milestone-group-head input.milestone-group-title::placeholder{color:#aab3c6;font-weight:500}
+button.milestone-group-toggle{margin-left:auto;padding:0;border:0;background:transparent;color:inherit;cursor:pointer}
+.milestone-card-fields{flex:1;min-width:0;flex-direction:column;gap:4px;display:flex}
+.milestone-card-fields input{box-sizing:border-box;width:100%;min-width:0;height:28px;padding:2px 8px;border:1px solid #c3c9d6;border-radius:8px;background:#fff;color:#58678b;font-family:TT Commons\:Regular,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.1}
+.milestone-card-fields input+input{color:#384259;font-family:TT Commons\:Bold,Arial,sans-serif;font-weight:700}
+.milestone-card-fields input::placeholder{color:#aab3c6;font-family:TT Commons\:Regular,Arial,sans-serif;font-weight:400}

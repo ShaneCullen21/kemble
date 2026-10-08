@@ -193,18 +193,88 @@ function Timeline({ onOpenGoal, transitioningGoalKey }) {
 function GoalPage({ goal, onClose }) {
   const milestoneGroups = goal.milestoneGroups;
   const [openMilestones, setOpenMilestones] = useState(() =>
-    milestoneGroups.filter((group) => group.tone === "tracking").map((group) => group.title),
+    milestoneGroups.flatMap((group, index) => (group.tone === "tracking" ? [index] : [])),
   );
-  const savedFunds = goal.funded;
-  const goalFunds = goal.target;
-  const monthlyFunds = goal.monthly;
+  const [groups, setGroups] = useState(milestoneGroups);
+  const [editingTodos, setEditingTodos] = useState(false);
+  const [todoDraft, setTodoDraft] = useState(milestoneGroups);
+  const [goalFunds, setGoalFunds] = useState(goal.target);
+  const [savedFunds, setSavedFunds] = useState(goal.funded);
+  const [puttingAway, setPuttingAway] = useState(goal.monthly);
+  const [frequency, setFrequency] = useState(goal.frequency || "month");
+  const [editingFunds, setEditingFunds] = useState(false);
+  const [goalDraft, setGoalDraft] = useState(String(goal.target));
+  const [savedDraft, setSavedDraft] = useState(String(goal.funded));
+  const [puttingDraft, setPuttingDraft] = useState(String(goal.monthly));
+  const [frequencyDraft, setFrequencyDraft] = useState(goal.frequency || "month");
   const fundsPercent = goalFunds > 0 ? Math.min(100, Math.round((savedFunds / goalFunds) * 100)) : 0;
+  const commitAmount = (value, fallback) => {
+    const next = Number(value);
+    return Number.isFinite(next) && next >= 0 ? next : fallback;
+  };
+  const toggleFundsEdit = () => {
+    if (!editingFunds) {
+      setGoalDraft(String(goalFunds));
+      setSavedDraft(String(savedFunds));
+      setPuttingDraft(String(puttingAway));
+      setFrequencyDraft(frequency);
+      setEditingFunds(true);
+      return;
+    }
+    setGoalFunds(commitAmount(goalDraft, goalFunds));
+    setSavedFunds(commitAmount(savedDraft, savedFunds));
+    setPuttingAway(commitAmount(puttingDraft, puttingAway));
+    setFrequency(frequencyDraft);
+    setEditingFunds(false);
+  };
   const [chat, setChat] = useState(null);
   const openChat = (title, messages) => setChat({ title, messages });
-  const toggleMilestone = (title) => {
+  const toggleMilestone = (index) => {
     setOpenMilestones((current) =>
-      current.includes(title) ? current.filter((item) => item !== title) : [...current, title],
+      current.includes(index) ? current.filter((item) => item !== index) : [...current, index],
     );
+  };
+  const updateTodoGroup = (groupIndex, title) => {
+    setTodoDraft((current) =>
+      current.map((group, index) => (index === groupIndex ? { ...group, title } : group)),
+    );
+  };
+  const updateTodoItem = (groupIndex, itemIndex, patch) => {
+    setTodoDraft((current) =>
+      current.map((group, index) => {
+        if (index !== groupIndex) return group;
+        return {
+          ...group,
+          items: group.items.map((item, index) => (index === itemIndex ? { ...item, ...patch } : item)),
+        };
+      }),
+    );
+  };
+  const toggleTodosEdit = () => {
+    if (!editingTodos) {
+      setTodoDraft(groups.map((group) => ({ ...group, items: group.items.map((item) => ({ ...item })) })));
+      setEditingTodos(true);
+      return;
+    }
+    setGroups(
+      todoDraft.map((group, index) => {
+        const previous = groups[index];
+        return {
+          ...group,
+          title: group.title.trim() || previous.title,
+          items: group.items.map((item, itemIndex) => {
+            const previousItem = previous.items[itemIndex];
+            const detail = item.detail?.trim() ?? "";
+            return {
+              ...item,
+              title: item.title.trim() || previousItem.title,
+              detail: detail || undefined,
+            };
+          }),
+        };
+      }),
+    );
+    setEditingTodos(false);
   };
   return (
     <div className="goal-page">
@@ -245,24 +315,69 @@ function GoalPage({ goal, onClose }) {
               <button
                 type="button"
                 className="funds-update"
-                aria-label="Update the budget"
-                onClick={() => openChat("Update the budget")}
+                aria-label={editingFunds ? "Save the budget" : "Update the budget"}
+                onClick={toggleFundsEdit}
               >
-                <img src={asset("assets/goal-edit.svg")} alt="" />
+                {editingFunds ? (
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3.2 8.4 6.3 11.5 12.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  <img src={asset("assets/goal-edit.svg")} alt="" />
+                )}
               </button>
             </div>
             <div className="funds-card">
               <div className="funds-row is-goal">
                 <span>Goal</span>
-                <strong>{formatMoney(goalFunds)}</strong>
+                {editingFunds ? (
+                  <input
+                    aria-label="Goal amount"
+                    inputMode="decimal"
+                    value={goalDraft}
+                    onChange={(event) => setGoalDraft(event.target.value)}
+                  />
+                ) : (
+                  <strong>{formatMoney(goalFunds)}</strong>
+                )}
               </div>
               <div className="funds-row is-saved">
                 <span>Saved so far</span>
-                <strong>{formatMoney(savedFunds)}</strong>
+                {editingFunds ? (
+                  <input
+                    aria-label="Saved so far"
+                    inputMode="decimal"
+                    value={savedDraft}
+                    onChange={(event) => setSavedDraft(event.target.value)}
+                  />
+                ) : (
+                  <strong>{formatMoney(savedFunds)}</strong>
+                )}
               </div>
               <div className="funds-row is-monthly">
                 <span>Putting away</span>
-                <strong>{formatMoney(monthlyFunds)} / month</strong>
+                {editingFunds ? (
+                  <span className="funds-monthly">
+                    <input
+                      aria-label="Amount put away"
+                      inputMode="decimal"
+                      value={puttingDraft}
+                      onChange={(event) => setPuttingDraft(event.target.value)}
+                    />
+                    <span>/</span>
+                    <select
+                      aria-label="How often"
+                      value={frequencyDraft}
+                      onChange={(event) => setFrequencyDraft(event.target.value)}
+                    >
+                      <option value="week">week</option>
+                      <option value="month">month</option>
+                      <option value="year">year</option>
+                    </select>
+                  </span>
+                ) : (
+                  <strong>{formatMoney(puttingAway)} / {frequency}</strong>
+                )}
               </div>
               <div className={`goal-funds-track${fundsPercent >= 90 ? " is-complete" : ""}`}>
                 <i style={{ width: `${fundsPercent}%` }} />
@@ -274,73 +389,126 @@ function GoalPage({ goal, onClose }) {
               <h2>To-do list</h2>
               <div className="todo-heading-meta">
                 <div className="todo-dots" aria-hidden="true">
-                  {milestoneGroups.slice(0, 10).map((group) => (
-                    <i key={group.title} className={group.tone === "done" ? "is-done" : group.tone === "tracking" ? "is-next" : "is-later"} />
+                  {groups.slice(0, 10).map((group, index) => (
+                    <i key={index} className={group.tone === "done" ? "is-done" : group.tone === "tracking" ? "is-next" : "is-later"} />
                   ))}
                 </div>
                 <button
                   type="button"
                   className="funds-update"
-                  aria-label="Update to-dos"
-                  onClick={() => openChat("Update to-dos")}
+                  aria-label={editingTodos ? "Save to-dos" : "Update to-dos"}
+                  onClick={toggleTodosEdit}
                 >
-                  <img className="todo-edit" src={asset("assets/goal-edit.svg")} alt="" />
+                  {editingTodos ? (
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M3.2 8.4 6.3 11.5 12.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  ) : (
+                    <img className="todo-edit" src={asset("assets/goal-edit.svg")} alt="" />
+                  )}
                 </button>
               </div>
             </div>
             <div className="todo-card">
-              {milestoneGroups.map((group) => {
+              {(editingTodos ? todoDraft : groups).map((group, groupIndex) => {
                 const actions = group.items.slice(0, 2);
-                const open = openMilestones.includes(group.title);
+                const open = openMilestones.includes(groupIndex);
                 const radio = group.tone === "done"
                   ? "assets/goal-radio-done.svg?v=2"
                   : group.tone === "tracking"
                     ? "assets/goal-radio-tracking.svg?v=2"
                     : "assets/goal-radio-later.svg?v=2";
+                const status = (
+                  <span className="milestone-group-meta">
+                    <span className="milestone-group-status">{group.tone === "done" ? "Done" : actions.filter((item) => !item.done).length}</span>
+                    <img
+                      className="milestone-toggle"
+                      src={asset(open ? "assets/goal-chevron-up.svg" : "assets/goal-chevron-down.svg")}
+                      alt=""
+                    />
+                  </span>
+                );
                 return (
-                  <div className={`milestone-group is-${group.tone}${open ? " is-open" : ""}`} key={group.title}>
-                    <button
-                      type="button"
-                      className="milestone-group-head"
-                      aria-expanded={open}
-                      onClick={() => toggleMilestone(group.title)}
-                    >
-                      <img className="milestone-radio" src={asset(radio)} alt="" />
-                      <span className="milestone-group-title">{group.title}</span>
-                      <span className="milestone-group-meta">
-                        <span className="milestone-group-status">{group.tone === "done" ? "Done" : actions.filter((item) => !item.done).length}</span>
-                        <img
-                          className="milestone-toggle"
-                          src={asset(open ? "assets/goal-chevron-up.svg" : "assets/goal-chevron-down.svg")}
-                          alt=""
+                  <div className={`milestone-group is-${group.tone}${open ? " is-open" : ""}`} key={groupIndex}>
+                    {editingTodos ? (
+                      <div className="milestone-group-head">
+                        <img className="milestone-radio" src={asset(radio)} alt="" />
+                        <input
+                          className="milestone-group-title"
+                          aria-label={`To-do ${groupIndex + 1}`}
+                          placeholder="To-do"
+                          value={group.title}
+                          onChange={(event) => updateTodoGroup(groupIndex, event.target.value)}
                         />
-                      </span>
-                    </button>
+                        <button type="button" className="milestone-group-toggle" aria-expanded={open} onClick={() => toggleMilestone(groupIndex)}>
+                          {status}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        className="milestone-group-head"
+                        aria-expanded={open}
+                        onClick={() => toggleMilestone(groupIndex)}
+                      >
+                        <img className="milestone-radio" src={asset(radio)} alt="" />
+                        <span className="milestone-group-title">{group.title}</span>
+                        {status}
+                      </button>
+                    )}
                     {open && (
                       <div className="milestone-group-body">
                         <span className="milestone-line" />
                         <div className="milestone-cards">
-                          {actions.map((item) => (
-                            <button
-                              key={item.title}
-                              type="button"
-                              className="milestone-card"
-                              onClick={() => openChat(item.title, item.history)}
-                            >
+                          {actions.map((item, itemIndex) => {
+                            const circle = (
                               <span
                                 className={`milestone-circle${item.done ? " is-done" : group.tone === "tracking" ? " is-next" : " is-later"}`}
                               />
-                              <span className="milestone-card-copy">
-                                <span>{item.title}</span>
-                                {item.detail && <strong>{item.detail}</strong>}
-                              </span>
-                              {item.owner === "photo" ? (
-                                <img className="milestone-owner is-photo" src={asset("assets/avatar-photo.png")} alt="" />
-                              ) : item.owner ? (
-                                <span className="milestone-owner">{item.owner}</span>
-                              ) : null}
-                            </button>
-                          ))}
+                            );
+                            const owner = item.owner === "photo" ? (
+                              <img className="milestone-owner is-photo" src={asset("assets/avatar-photo.png")} alt="" />
+                            ) : item.owner ? (
+                              <span className="milestone-owner">{item.owner}</span>
+                            ) : null;
+                            if (editingTodos) {
+                              return (
+                                <div className="milestone-card" key={itemIndex}>
+                                  {circle}
+                                  <span className="milestone-card-fields">
+                                    <input
+                                      aria-label={`Sub-to-do ${itemIndex + 1}`}
+                                      placeholder="Sub-to-do"
+                                      value={item.title}
+                                      onChange={(event) => updateTodoItem(groupIndex, itemIndex, { title: event.target.value })}
+                                    />
+                                    <input
+                                      aria-label={`Decision ${itemIndex + 1}`}
+                                      placeholder="Decision"
+                                      value={item.detail ?? ""}
+                                      onChange={(event) => updateTodoItem(groupIndex, itemIndex, { detail: event.target.value })}
+                                    />
+                                  </span>
+                                  {owner}
+                                </div>
+                              );
+                            }
+                            return (
+                              <button
+                                key={item.title}
+                                type="button"
+                                className="milestone-card"
+                                onClick={() => openChat(item.title, item.history)}
+                              >
+                                {circle}
+                                <span className="milestone-card-copy">
+                                  <span>{item.title}</span>
+                                  {item.detail && <strong>{item.detail}</strong>}
+                                </span>
+                                {owner}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
