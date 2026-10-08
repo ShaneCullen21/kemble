@@ -113,26 +113,31 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .timeline-card.is-marker{cursor:default}
 .season-line{left:11.5px;top:8px;bottom:8px}
 
-.goal-card{background:#485572;border-radius:24px}
+.goal-card{width:240px;background:#485572;border-radius:24px}
 .goal-image{aspect-ratio:5/4;width:100%;height:auto;background:#efeee9;border:.5px solid #485572;border-radius:24px;overflow:visible}
 .goal-card.is-overview .goal-image{border-radius:24px}
 .goal-shared-media{border-radius:24px;overflow:hidden}
 .goal-shared-media>img:first-child{border-radius:24px}
 .tone-navy .goal-image,.tone-blue .goal-image{border-color:#485572}
-.goal-card.is-overview,.goal-card.is-overview .goal-image{width:100%;height:auto;aspect-ratio:1}
+.goal-card.is-overview{width:160px;height:160px}
+.goal-card.is-overview .goal-image{width:100%;height:auto;aspect-ratio:1}
+.goal-card.is-focused{width:360px}
 .goal-card.is-focused .goal-image{width:100%;height:auto;aspect-ratio:5/4}
-.count-badge,.tone-navy .count-badge{top:var(--badge-y, -6px);right:var(--badge-right, -8px);left:auto;width:var(--badge-size, 36px);height:var(--badge-size, 36px);background:#8bb0ec;color:#384259;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:var(--badge, 12px);font-weight:700;line-height:var(--badge-lh, 19px)}
-.private-badge{top:var(--chip-y, 16px);left:var(--chip-x, 16px);right:auto;box-sizing:border-box;width:var(--chip-w, auto);height:var(--chip-h, 30px);gap:4px;padding:4px 8px;border-radius:var(--chip-r, 12px);background:#58678b;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:var(--chip, 14px);font-weight:700;line-height:var(--chip-lh, 22px)}
-.private-badge img{width:var(--lock, 14px);height:var(--lock, 14px);flex:none}
-.goal-card.is-overview .private-badge{top:var(--chip-y, 7.5px);left:var(--chip-x, 7.5px);width:var(--chip-w, 24px);height:var(--chip-h, 24px);justify-content:center;gap:0;padding:0;border-radius:50%;background:#58678b}
-.goal-card.is-overview .private-badge img{width:var(--lock, 13px);height:var(--lock, 13px)}
-.goal-details,.tone-navy .goal-details,.tone-blue .goal-details{z-index:1;gap:var(--gap, 12px);margin-top:-24px;padding:calc(24px + var(--pad, 16px)) var(--pad, 16px) var(--pad, 16px);border-radius:24px;background:#485572;color:#fff}
-.goal-summary{gap:var(--gap, 12px)}
-.goal-details h2{color:#fff;font-size:var(--title, 24px);font-weight:500;line-height:var(--title-lh, 32px);-webkit-line-clamp:2}
-.goal-date{color:#fff;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:var(--season, 18px);font-weight:500;line-height:var(--season-lh, 24px)}
-.goal-funds{justify-content:space-between;align-items:baseline;gap:8px;width:100%;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:var(--stat, 16px);font-weight:700;line-height:var(--stat-lh, 22px);display:flex}
+.count-badge,.tone-navy .count-badge{top:-6px;right:-8px;left:auto;width:36px;height:36px;background:#8bb0ec;color:#384259;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:max(12px, calc(12px / var(--s, 1)));font-weight:500;line-height:1}
+.goal-card.is-overview .count-badge{top:-14px}
+.private-badge{top:16px;left:16px;right:auto;height:34px;gap:4px;padding:6px 8px;border-radius:12px;background:#58678b;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:max(14px, calc(12px / var(--s, 1)));font-weight:700;line-height:1.57}
+.private-badge img{width:14px;height:14px;flex:none}
+.goal-card.is-focused .private-badge{font-size:max(16px, calc(12px / var(--s, 1)));line-height:1.375}
+.goal-card.is-overview .private-badge{top:8px;left:8px;width:26px;height:26px;padding:0;border-radius:12px;justify-content:center;gap:0;background:#58678b}
+.goal-card.is-overview .private-badge img{width:14px;height:14px}
+.goal-details,.tone-navy .goal-details,.tone-blue .goal-details{z-index:1;gap:12px;margin-top:-24px;padding:40px 20px 16px;border-radius:24px;background:#485572;color:#fff}
+.goal-summary{gap:12px}
+.goal-details h2{color:#fff;font-size:max(24px, calc(12px / var(--s, 1)));font-weight:500;line-height:1.333;-webkit-line-clamp:2}
+.goal-card.is-focused .goal-details h2{font-size:max(32px, calc(12px / var(--s, 1)));line-height:1.25}
+.goal-date{color:#fff;font-family:TT Commons\:Medium,Arial,sans-serif;font-size:max(18px, calc(12px / var(--s, 1)));font-weight:500;line-height:1.333}
+.goal-funds{justify-content:space-between;align-items:baseline;gap:8px;width:100%;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:max(16px, calc(12px / var(--s, 1)));font-weight:700;line-height:1.375;display:flex}
 .goal-funds span:last-child{text-align:right}
-.progress-inline,.goal-card .progress-inline{gap:8px;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:var(--stat, 16px);font-weight:700;line-height:var(--stat-lh, 22px)}
+.progress-inline,.goal-card .progress-inline{gap:8px;color:#fff;font-family:TT Commons\:Bold,Arial,sans-serif;font-size:max(16px, calc(12px / var(--s, 1)));font-weight:700;line-height:1.375}
 .progress-focused{gap:8px}
-.goal-card .progress-track{background:#fff;height:var(--bar, 12px)}
+.goal-card .progress-track{background:#fff;height:12px}
 .goal-card .progress-track span,.tone-navy .progress-track span{background:#9bbcef}
