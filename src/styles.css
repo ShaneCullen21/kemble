@@ -210,4 +210,6 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .bottom-nav img{width:19px;height:19px}
 .bottom-nav button.chat{background:#dde9fa;border:1px solid #8bb0ec66;border-radius:40px;width:62px;height:62px;box-shadow:0 1.6px 1.6px #0003}
 .bottom-nav .chat img{width:19px;height:19px}
-.goal-card .progress-track.is-complete span,.goal-funds-track.is-complete i{background:#d5f784}
+.goal-card .progress-track.is-complete span,.goal-funds-track.is-complete i{background:#d5f784}.milestone-group-title,.milestone-group-status{font-family:TT Commons\:DemiBold,Arial,sans-serif;font-size:16px;font-weight:600;line-height:22px}
+.milestone-group-status.is-done{font-family:TT Commons\:Bold,Arial,sans-serif;font-weight:700}
+.milestone-card-copy span{font-family:TT Commons\:Regular,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.1}

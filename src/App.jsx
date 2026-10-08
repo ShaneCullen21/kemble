@@ -308,7 +308,7 @@ function GoalPage({ goal, onClose }) {
                       <img className="milestone-radio" src={asset(radio)} alt="" />
                       <span className="milestone-group-title">{group.title}</span>
                       <span className="milestone-group-meta">
-                        <span className="milestone-group-status">{group.tone === "done" ? "Done" : actions.filter((item) => !item.done).length}</span>
+                        <span className={`milestone-group-status${group.tone === "done" ? " is-done" : ""}`}>{group.tone === "done" ? "Done" : actions.filter((item) => !item.done).length}</span>
                         <img
                           className="milestone-toggle"
                           src={asset(open ? "assets/goal-chevron-up.svg" : "assets/goal-chevron-down.svg")}
