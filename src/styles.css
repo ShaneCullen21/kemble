@@ -232,3 +232,6 @@ button.milestone-group-toggle{margin-left:auto;padding:0;border:0;background:tra
 .goal-page-hero{position:sticky;top:0;z-index:0}
 .goal-page-sheet{z-index:1}
 .funds-update svg.funds-save{width:20px;height:20px;display:block}
+.goal-page{padding-bottom:0}
+.goal-page-body{padding-bottom:calc(80px + max(16px, env(safe-area-inset-bottom)))}
+.goal-chat{padding-bottom:0}
