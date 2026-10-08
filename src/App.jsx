@@ -27,7 +27,7 @@ function formatMoney(amount) {
   return `£${amount}`;
 }
 
-function GoalCard({ goal, position, level, pinch, onOpen, transitioning }) {
+function GoalCard({ goal, position, level, onOpen, transitioning }) {
   const overview = level === 0;
   const className = [
     "goal-card",
@@ -42,10 +42,7 @@ function GoalCard({ goal, position, level, pinch, onOpen, transitioning }) {
   return (
     <article
       className={className}
-      style={{
-        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-        "--pinch": pinch,
-      }}
+      style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
       data-goal-id={goal.id}
       aria-label={`${goal.title}, ${goal.date}`}
       role="button"
@@ -891,7 +888,6 @@ export default function App() {
                 goal={goal}
                 position={cardPosition(index, level, scale)}
                 level={level}
-                pinch={zoom / levelScale[level]}
                 transitioning={transitionKey === `canvas-${goal.id}`}
                 onOpen={() => {
                   if (suppressClick.current) {

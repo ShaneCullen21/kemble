@@ -136,12 +136,3 @@ button.milestone-card{width:100%;color:inherit;font:inherit;text-align:left;curs
 .progress-focused{gap:8px}
 .goal-card .progress-track{background:#fff;height:12px}
 .goal-card .progress-track span,.tone-navy .progress-track span{background:#9bbcef}
-.goal-details h2,
-.goal-date,
-.goal-funds,
-.progress-inline>span,
-.private-badge,
-.count-badge{zoom:calc(1 / var(--pinch, 1))}
-.count-badge,.tone-navy .count-badge{top:calc(-22px / var(--pinch, 1));right:calc(8px / var(--pinch, 1))}
-.goal-card.is-overview .count-badge{right:0}
-.private-badge{top:calc(16px / var(--pinch, 1));left:calc(16px / var(--pinch, 1))}
