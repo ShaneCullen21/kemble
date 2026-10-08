@@ -190,6 +190,17 @@ function Timeline({ onOpenGoal, transitioningGoalKey }) {
   );
 }
 
+function SaveIcon() {
+  return (
+    <svg className="funds-save" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+      />
+    </svg>
+  );
+}
+
 function GoalPage({ goal, onClose }) {
   const milestoneGroups = goal.milestoneGroups;
   const [openMilestones, setOpenMilestones] = useState(() =>
@@ -318,13 +329,7 @@ function GoalPage({ goal, onClose }) {
                 aria-label={editingFunds ? "Save the budget" : "Update the budget"}
                 onClick={toggleFundsEdit}
               >
-                {editingFunds ? (
-                  <svg viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M3.2 8.4 6.3 11.5 12.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                ) : (
-                  <img src={asset("assets/goal-edit.svg")} alt="" />
-                )}
+                {editingFunds ? <SaveIcon /> : <img src={asset("assets/goal-edit.svg")} alt="" />}
               </button>
             </div>
             <div className="funds-card">
@@ -399,13 +404,7 @@ function GoalPage({ goal, onClose }) {
                   aria-label={editingTodos ? "Save to-dos" : "Update to-dos"}
                   onClick={toggleTodosEdit}
                 >
-                  {editingTodos ? (
-                    <svg viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="M3.2 8.4 6.3 11.5 12.8 4.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  ) : (
-                    <img className="todo-edit" src={asset("assets/goal-edit.svg")} alt="" />
-                  )}
+                  {editingTodos ? <SaveIcon /> : <img className="todo-edit" src={asset("assets/goal-edit.svg")} alt="" />}
                 </button>
               </div>
             </div>

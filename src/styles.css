@@ -228,3 +228,7 @@ button.milestone-group-toggle{margin-left:auto;padding:0;border:0;background:tra
 .milestone-card-fields input{box-sizing:border-box;width:100%;min-width:0;height:28px;padding:2px 8px;border:1px solid #c3c9d6;border-radius:8px;background:#fff;color:#58678b;font-family:TT Commons\:Regular,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.1}
 .milestone-card-fields input+input{color:#384259;font-family:TT Commons\:Bold,Arial,sans-serif;font-weight:700}
 .milestone-card-fields input::placeholder{color:#aab3c6;font-family:TT Commons\:Regular,Arial,sans-serif;font-weight:400}
+
+.goal-page-hero{position:sticky;top:0;z-index:0}
+.goal-page-sheet{z-index:1}
+.funds-update svg.funds-save{width:20px;height:20px;display:block}
